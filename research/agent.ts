@@ -1,12 +1,6 @@
 import { END, InMemoryStore, START, StateGraph } from '@langchain/langgraph';
 import { ResearchAgentState, ResearcherAgentOutput } from './state';
-import { compressResearch, llmCall, toolCalls } from './nodes';
-
-export enum ResearchAgentNodes {
-    llmCall = 'llmCall',
-    toolCalls = 'toolCalls',
-    compressResearch = 'compressResearch',
-}
+import { compressResearch, llmCall, ResearchAgentNodes, toolCalls } from './nodes';
 
 const store = new InMemoryStore();
 

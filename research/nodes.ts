@@ -1,6 +1,6 @@
 import { Command, type GraphNode } from '@langchain/langgraph';
 import { flashModel, proModel } from '../models';
-import { tavilySearch, think } from '../tools';
+import { invokeTools, think } from '../tools';
 import type { IResearchAgentOutput, IResearchAgentState } from '../types/state';
 import {
     AIMessage,
@@ -15,13 +15,16 @@ import {
     researchAgentPrompt,
 } from './prompts';
 import { getToday } from '../utils';
-import type { DynamicStructuredTool } from '@langchain/core/tools';
-import { ResearchAgentNodes } from './agent';
+import { tavilySearch } from './tools';
+
+export enum ResearchAgentNodes {
+    llmCall = 'llmCall',
+    toolCalls = 'toolCalls',
+    compressResearch = 'compressResearch',
+}
 
 const tools = [think, tavilySearch];
-const toolsByName: Record<string, DynamicStructuredTool> = Object.fromEntries(
-    tools.map(tool => [tool.name, tool]),
-);
+const toolsByName = Object.fromEntries(tools.map(tool => [tool.name, tool]));
 
 const modelWithTools = flashModel.bindTools(tools);
 
@@ -42,11 +45,9 @@ export const llmCall: GraphNode<IResearchAgentState> = async ({ messages }) => {
 };
 
 export const toolCalls: GraphNode<IResearchAgentState> = async ({ messages }) => {
-    const { tool_calls } = messages.at(-1)! as AIMessage;
+    const { tool_calls } = messages.at(-1) as AIMessage;
 
-    const observations: string[] = await Promise.all(
-        tool_calls!.map(({ name, args }) => toolsByName[name]?.invoke(args)),
-    );
+    const observations: string[] = await invokeTools(tool_calls!, toolsByName);
 
     return new Command({
         update: {

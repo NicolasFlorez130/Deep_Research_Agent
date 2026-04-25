@@ -17,6 +17,5 @@ export const SupervisorResponse = z.xor([
                     'The topic to research. Should be a single topic, and should be described in high detail (at least a paragraph).',
                 ),
         ),
-        think: z.boolean().describe('Boolean for indicating if should use the think-tool'),
     }),
 ]);

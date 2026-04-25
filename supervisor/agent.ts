@@ -1,28 +1,15 @@
-import type { GraphNode } from '@langchain/langgraph';
-import type { IAgentState } from '../types/state';
-import { flashModel } from '../models';
-import { SystemMessage } from '@langchain/core/messages';
-import { leadResearchPrompt } from './prompts';
-import { getToday } from '../utils';
-import { SupervisorResponse } from './response_schemas';
+import { END, InMemoryStore, START, StateGraph } from '@langchain/langgraph';
+import { AgentState } from '../state';
+import { supervisor, SupervisorNodes, toolCalls } from './nodes';
 
-const supervisorTools = [];
+const store = new InMemoryStore();
 
-enum SupervisorNodes {
-    supervisor = 'supervisor',
-}
+const graph = new StateGraph(AgentState)
 
-const maxConcurrentResearchers = 3;
-const maxResearcherIterations = 6;
+    .addNode(SupervisorNodes.supervisor, supervisor, { ends: [SupervisorNodes.toolCalls, END] })
+    .addNode(SupervisorNodes.toolCalls, toolCalls)
 
-export const supervisor: GraphNode<IAgentState> = async ({ messages }) => {
-    const structuredModel = flashModel.withStructuredOutput(SupervisorResponse);
-    const response = await structuredModel.invoke([
-        new SystemMessage(
-            leadResearchPrompt(getToday(), maxConcurrentResearchers, maxResearcherIterations),
-        ),
-        ...messages,
-    ]);
+    .addEdge(START, SupervisorNodes.supervisor)
+    .addEdge(SupervisorNodes.toolCalls, SupervisorNodes.supervisor);
 
-    return {};
-};
+export const supervisorAgent = graph.compile({ store });
