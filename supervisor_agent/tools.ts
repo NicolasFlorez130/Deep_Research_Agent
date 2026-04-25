@@ -1,12 +1,12 @@
 import { tool } from '@langchain/core/tools';
 import z from 'zod';
-import { researchAgent } from '../research/agent';
+import { researchAgent } from '../research_agent/agent';
 import { HumanMessage } from '@langchain/core/messages';
 
 export const delegateResearch = tool(
     async ({ query, researchTopic }) => {
         const { compressedResearch } = await researchAgent.invoke({
-            messages: [new HumanMessage(query)],
+            researchMessages: [new HumanMessage(query)],
             researchTopic,
         });
 

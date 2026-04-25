@@ -1,13 +1,13 @@
-import { tool } from "@langchain/core/tools";
-import { getToday, separator, tavilyClient } from "../utils";
-import { flashModel } from "../models";
-import { SummarySchema } from "./schemas";
-import { summarizeWebpagePrompt } from "./prompts";
-import { SystemMessage } from "@langchain/core/messages";
-import z from "zod";
+import { tool } from '@langchain/core/tools';
+import { getToday, separator, tavilyClient } from '../utils';
+import { flashModel } from '../models';
+import { SummarySchema } from './schemas';
+import { summarizeWebpagePrompt } from './prompts';
+import { SystemMessage } from '@langchain/core/messages';
+import z from 'zod';
 
 export const tavilySearch = tool(
-    async ({ query, topic, maxResults }, { runId }) => {
+    async ({ query, topic, maxResults }) => {
         const { results } = await tavilyClient.search(query, {
             topic,
             maxResults,

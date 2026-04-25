@@ -1,14 +1,17 @@
 import { Annotation } from '@langchain/langgraph';
 import { addOperator, messages } from '../utils';
 
-export const SupervisorState = Annotation.Root({
-    messages,
+export const SupervisorAgentState = Annotation.Root({
+    supervisorMessages: messages,
     researchBrief: Annotation<string>,
     notes: Annotation<string[] | undefined>({
         reducer: addOperator,
     }),
-    rawNotes: Annotation<string[] | undefined>({
+});
+
+export const SupervisorAgentOutput = Annotation.Root({
+    messages,
+    notes: Annotation<string[] | undefined>({
         reducer: addOperator,
     }),
-    researchIterations: Annotation<number>,
 });

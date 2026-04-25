@@ -19,4 +19,5 @@ export const separator = (length: number) =>
 
 export const messages = Annotation<BaseMessage[]>({
     reducer: messagesStateReducer,
+    default: () => []
 });

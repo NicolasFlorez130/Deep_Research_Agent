@@ -2,7 +2,7 @@ import { Annotation } from '@langchain/langgraph';
 import { messages } from '../utils';
 
 export const ResearchAgentState = Annotation.Root({
-    messages,
+    researchMessages: messages,
     researchTopic: Annotation<string>,
 });
 

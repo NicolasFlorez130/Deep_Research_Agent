@@ -1,8 +1,9 @@
 {
   "node_version": "20",
   "graphs": {
-    "researchAgent": "./research\\agent.ts:researchAgent",
-    "supervisorAgent": "./supervisor\\agent.ts:supervisorAgent"
+    "deepResearchAgent": "./agent.ts:deepResearchAgent",
+    "researchAgent": "./research_agent\\agent.ts:researchAgent",
+    "supervisorAgent": "./supervisor_agent\\agent.ts:supervisorAgent"
   },
   "env": ".env"
 }

@@ -1,5 +1,5 @@
 import { Command, type GraphNode } from '@langchain/langgraph';
-import { flashModel, proModel } from '../models';
+import { flashLiteModel, proModel } from '../models';
 import { invokeTools, think } from '../tools';
 import type { IResearchAgentOutput, IResearchAgentState } from '../types/state';
 import {
@@ -26,17 +26,17 @@ export enum ResearchAgentNodes {
 const tools = [think, tavilySearch];
 const toolsByName = Object.fromEntries(tools.map(tool => [tool.name, tool]));
 
-const modelWithTools = flashModel.bindTools(tools);
+const modelWithTools = flashLiteModel.bindTools(tools);
 
-export const llmCall: GraphNode<IResearchAgentState> = async ({ messages }) => {
+export const llmCall: GraphNode<IResearchAgentState> = async ({ researchMessages }) => {
     const response = await modelWithTools.invoke([
         new SystemMessage(researchAgentPrompt(getToday())),
-        ...messages,
+        ...researchMessages,
     ]);
 
     return new Command({
         update: {
-            messages: [response],
+            researchMessages: [response],
         },
         goto: !!response.tool_calls?.length
             ? ResearchAgentNodes.toolCalls
@@ -44,14 +44,14 @@ export const llmCall: GraphNode<IResearchAgentState> = async ({ messages }) => {
     });
 };
 
-export const toolCalls: GraphNode<IResearchAgentState> = async ({ messages }) => {
-    const { tool_calls } = messages.at(-1) as AIMessage;
+export const toolCalls: GraphNode<IResearchAgentState> = async ({ researchMessages }) => {
+    const { tool_calls } = researchMessages.at(-1) as AIMessage;
 
     const observations: string[] = await invokeTools(tool_calls!, toolsByName);
 
     return new Command({
         update: {
-            messages: tool_calls!.map(
+            researchMessages: tool_calls!.map(
                 ({ id, name }, i) =>
                     new ToolMessage({
                         content: observations.at(i),
@@ -64,17 +64,17 @@ export const toolCalls: GraphNode<IResearchAgentState> = async ({ messages }) =>
 };
 
 export const compressResearch: GraphNode<IResearchAgentState> = async ({
-    messages,
+    researchMessages,
     researchTopic,
 }) => {
     const response = await proModel.invoke([
         new SystemMessage(compressResearchPrompt(getToday())),
-        ...messages,
+        ...researchMessages,
         new HumanMessage(compressResearchHumanMessage(researchTopic)),
     ]);
 
-    const rawNotes = filterMessages(messages, { includeTypes: ['tool', 'ai'] }).map(({ content }) =>
-        content.toString(),
+    const rawNotes = filterMessages(researchMessages, { includeTypes: ['tool', 'ai'] }).map(
+        ({ content }) => content.toString(),
     );
 
     return new Command<IResearchAgentOutput['Update']>({
