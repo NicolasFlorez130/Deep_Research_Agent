@@ -1,0 +1,7 @@
+{
+  "node_version": "20",
+  "graphs": {
+    "researchAgent": "./research\\agent.ts:researchAgent"
+  },
+  "env": ".env"
+}

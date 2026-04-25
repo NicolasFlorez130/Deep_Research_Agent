@@ -1,0 +1,25 @@
+{
+    "name": "deep_research_agent",
+    "module": "index.ts",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "config": "bun create langgraph config",
+        "dev": "bunx @langchain/langgraph-cli dev",
+        "up": "bunx @langchain/langgraph-cli up",
+        "build": "bunx @langchain/langgraph-cli build"
+    },
+    "devDependencies": {
+        "@types/bun": "latest"
+    },
+    "peerDependencies": {
+        "typescript": "^5"
+    },
+    "dependencies": {
+        "@langchain/core": "^1.1.41",
+        "@langchain/google": "^0.1.10",
+        "@langchain/langgraph": "^1.2.9",
+        "@tavily/core": "^0.7.2",
+        "zod": "^4.3.6"
+    }
+}
