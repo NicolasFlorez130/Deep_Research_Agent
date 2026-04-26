@@ -3,7 +3,7 @@ import z from 'zod';
 import { type ToolCall } from '@langchain/core/messages';
 
 export const think = tool(({ reflection }) => `Reflection recorded: ${reflection}`, {
-    name: 'think',
+    name: 'thinkTool',
     description: `
     Tool for strategic reflection on research progress and decision-making.
 
