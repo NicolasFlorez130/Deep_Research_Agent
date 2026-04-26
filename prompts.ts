@@ -18,13 +18,13 @@ Respond in valid JSON format with these exact keys:
 
 If you need to ask a clarifying question, return:
 "need_clarification": true,
-"question": "<your clarifying question>",
+"question": "<acknowledgement message that you will now start research based on the provided information>",
 "verification": ""
 
 If you do not need to ask a clarifying question, return:
 "need_clarification": false,
 "question": "",
-"verification": "<acknowledgement message that you will now start research based on the provided information>"
+"verification": "<your clarifying question>"
 
 For the verification message when no clarification is needed:
 - Acknowledge that you have sufficient information to proceed

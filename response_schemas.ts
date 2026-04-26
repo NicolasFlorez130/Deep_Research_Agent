@@ -6,11 +6,11 @@ export const ClarifyWithUser = z.object({
         .describe('Whether the user needs to be asked a clarifying question.'),
     question: z
         .string()
-        .describe('A question to ask the user to clarify the report scope'),
+        .describe('Acknowledgement message that you will now start research based on the provided information'),
     verification: z
         .string()
         .describe(
-            'Verify message that we will start research after the user has provided the necessary information.',
+            'Your clarifying question',
         ),
 });
 
