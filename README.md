@@ -25,6 +25,8 @@ The main state graph orchestrates the high-level flow with the following core no
 
 The agent can be explored interactively in [LangSmith](https://smith.langchain.com/) using the LangGraph dev server. The graph topology is rendered live, and each node execution is traced in the right-hand panel — making it easy to inspect the multi-agent routing decisions and state transitions in real time.
 
+![Deep Research Agent running in LangSmith Studio](screenshots/rendered_graph.png)
+
 ## Getting Started
 
 Implement the environments from the `.env.example` in another `.env` or `.env.local`
